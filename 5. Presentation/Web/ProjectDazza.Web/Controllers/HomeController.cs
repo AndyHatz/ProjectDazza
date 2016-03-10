@@ -1,12 +1,11 @@
-﻿using System;
+﻿using ProjectDazza.Web.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace ProjectDazza.Web.Controllers
 {
-    public class HomeController : Controller
+	public class HomeController : Controller
     {
         public ActionResult Index()
         {
@@ -17,8 +16,43 @@ namespace ProjectDazza.Web.Controllers
         {
             ViewBag.Message = "Your application description page.";
 
-            return View();
+			var model = new AddressModel();
+			model.address = "158 City Road, Southbank";
+
+
+			model.countries = GiveMeCountries();
+
+
+			return View(model);
         }
+
+		public ActionResult Save(string jsondata)
+		{
+			var serializer = new JavaScriptSerializer();
+
+			AddressModel model = serializer.Deserialize<AddressModel>(jsondata);
+
+			return View("About");
+		}
+
+		private List<string> GiveMeCountries()
+		{
+			return new List<string>()
+			{
+				"Australia",
+				"New Zealand",
+				"China",
+				"India",
+				"United States",
+				"Indonesia",
+				"Brazil"
+			};
+		}
+
+		//public ActionResult About(AddressModel model)
+		//{
+		//	return new EmptyResult();
+		//}
 
         public ActionResult Contact()
         {
